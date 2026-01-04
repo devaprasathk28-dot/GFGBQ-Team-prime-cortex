@@ -125,9 +125,3 @@ Ideal for:
 - Telecom OTT Bundles
 - Product Analytics Teams
 - AI Research & Academic Projects
-
-
-## 👨‍💻 Developed By
-**Team Prime Cortex – ByteQuest Hackathon**
-Built with ❤️ Intelligence & Innovation
-DEVAPRASATH K
