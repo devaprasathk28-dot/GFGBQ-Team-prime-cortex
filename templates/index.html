@@ -487,12 +487,62 @@ function predict(){
         row.insertCell(2).innerHTML=result.churn_probability+"%";
         row.insertCell(3).innerHTML=result.purchase_probability+"%";
         row.insertCell(4).innerHTML=priorityText;
+        reportHistory.push({
+            watch_hours: watch,
+            last_week_watch: lastweek,
+            subscription_type: subs,
+            age: age,
+            inactivity_days: inactivity,
+            total_shows: shows,
+            premium_interest: premium,
+            feedback_rating: feedback,
+
+            churn_probability: result.churn_probability,
+            purchase_probability: result.purchase_probability,
+            risk_level: priorityText,
+            engagement_score: Math.round(engagement),
+            ai_reason: document.getElementById("ai_reason") 
+                    ? document.getElementById("ai_reason").innerText 
+                    : "Not Available"
+        });
+
 
     })
     .catch(()=>{
         alert("Backend Not Running!");
     });
 }
+function downloadReport(){
+    if(reportHistory.length === 0){
+        alert("No predictions yet to export!");
+        return;
+    }
+
+    let csv = "Watch Hours,Last Week Watch,Subscription Type,Age,Inactivity Days,Total Shows,Premium Interest,Feedback Rating,Churn Probability,Purchase Probability,Risk Level,Engagement Score,AI Reason\n";
+
+    reportHistory.forEach(r=>{
+        csv += `${r.watch_hours},${r.last_week_watch},${r.subscription_type},${r.age},${r.inactivity_days},${r.total_shows},${r.premium_interest},${r.feedback_rating},${r.churn_probability},${r.purchase_probability},${r.risk_level},${r.engagement_score},"${r.ai_reason}"\n`;
+    });
+
+    let blob = new Blob([csv], {type: "text/csv"});
+    let link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "OTT_AI_Detailed_Report.csv";
+    link.click();
+}
+function downloadExcel(){
+    if(reportHistory.length === 0){
+        alert("No predictions yet to export!");
+        return;
+    }
+
+    const ws = XLSX.utils.json_to_sheet(reportHistory);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "OTT_AI_Report");
+
+    XLSX.writeFile(wb, "OTT_AI_Business_Report.xlsx");
+}
+
 toast.style.display = "block";
 toast.style.opacity = "1";
 
